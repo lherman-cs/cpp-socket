@@ -6,20 +6,23 @@
 #include <sys/socket.h>
 #include <cstring>
 
-InetAddressV4::InetAddressV4(std::string ip, int port)
-    : InetAddress(IPV4, ip, port, (struct sockaddr*)&this->addr,
-                  sizeof(this->addr)) {
-  memset(&this->addr, 0, sizeof(this->addr));
-  this->addr.sin_family = InetAddress::family;
+struct sockaddr_in InetAddressV4::construct_addr(std::string ip,
+                                                 uint16_t port) {
+  struct sockaddr_in addr;
+
+  memset(&addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
 
   if (ip == "*")
-    this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
   else {
-    int return_val =
-        inet_pton(InetAddress::family, ip.c_str(), &this->addr.sin_addr.s_addr);
-
+    int return_val = inet_pton(AF_INET, ip.c_str(), &addr.sin_addr.s_addr);
     if (return_val <= 0) die(return_val, "Invalid IP string");
   }
+  addr.sin_port = htons(port);
 
-  this->addr.sin_port = htons(port);
+  return addr;
 }
+
+InetAddressV4::InetAddressV4(std::string ip, uint16_t port)
+    : InetAddress(construct_addr(ip, port)) {}

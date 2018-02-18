@@ -2,27 +2,26 @@
 #define INET_ADDRESS_HPP
 
 #include <netinet/in.h>
+#include <sys/types.h>
 #include <string>
 
-enum Family { LOCAL, IPV4, IPV6 };
+union GenericAddress {
+  struct sockaddr addr;
+  struct sockaddr_in addr4;
+  struct sockaddr_in6 addr6;
+};
 
 class InetAddress {
  protected:
-  int family;
-  std::string ip;
-  int port;
-  struct sockaddr* generic_addr;
-  int size;
+  union GenericAddress _addr;
+  socklen_t size;
 
-  InetAddress(Family family, std::string ip, int port,
-              struct sockaddr* generic_addr, int size);
+  InetAddress(const struct sockaddr_in& addr4);
 
  public:
-  InetAddress(const InetAddress& other);
-  struct sockaddr* get_generic_addr();
+  sa_family_t get_family();
+  struct sockaddr* get_addr();
   int get_size();
-  std::string info();
-  int get_family();
 };
 
 #endif
