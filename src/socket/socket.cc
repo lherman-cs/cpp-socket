@@ -8,6 +8,16 @@ int alias_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
   return connect(sockfd, addr, addrlen);
 }
 
+int alias_bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
+  return bind(sockfd, addr, addrlen);
+}
+
+int alias_listen(int sockfd, int backlog) { return listen(sockfd, backlog); }
+
+int alias_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) {
+  return accept(sockfd, addr, addrlen);
+}
+
 Socket::Socket(InetAddress &addr, Type type) {
   this->addr = &addr;
   if (type == STREAM)

@@ -6,10 +6,9 @@
 #include <sys/socket.h>
 #include <cstring>
 
-InetAddressV4::InetAddressV4(std::string ip, int port) : InetAddress(IPV4) {
-  this->ip = ip;
-  this->port = port;
-
+InetAddressV4::InetAddressV4(std::string ip, int port)
+    : InetAddress(IPV4, ip, port, (struct sockaddr*)&this->addr,
+                  sizeof(this->addr)) {
   memset(&this->addr, 0, sizeof(this->addr));
   this->addr.sin_family = InetAddress::family;
 
@@ -24,9 +23,3 @@ InetAddressV4::InetAddressV4(std::string ip, int port) : InetAddress(IPV4) {
 
   this->addr.sin_port = htons(port);
 }
-
-struct sockaddr* InetAddressV4::get_addr() {
-  return (struct sockaddr*)&this->addr;
-}
-
-int InetAddressV4::get_size() { return sizeof(this->addr); }

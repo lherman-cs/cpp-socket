@@ -9,12 +9,18 @@ enum Family { LOCAL, IPV4, IPV6 };
 class InetAddress {
  protected:
   int family;
-  InetAddress(Family family);
+  std::string ip;
+  int port;
+  struct sockaddr* generic_addr;
+  int size;
+
+  InetAddress(Family family, std::string ip, int port,
+              struct sockaddr* generic_addr, int size);
 
  public:
   InetAddress(const InetAddress& other);
-  virtual struct sockaddr* get_addr() = 0;
-  virtual int get_size() = 0;
+  struct sockaddr* get_generic_addr();
+  int get_size();
   std::string info();
   int get_family();
 };
