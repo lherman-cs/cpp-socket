@@ -3,7 +3,7 @@
 
 #include <unistd.h>
 
-TCPSocket::TCPSocket(InetAddress &addr) : Socket(addr, STREAM) {}
+TCPSocket::TCPSocket(InetAddress &addr) : Socket(addr, SOCK_STREAM) {}
 
 TCPSocket::~TCPSocket() {}
 
@@ -20,13 +20,11 @@ void TCPSocket::bind() {
   if (return_val < 0) die(return_val, "Can't bind");
 }
 
-void TCPSocket::listen(int max_queue_length) {
-  int return_val = alias_listen(this->socket_fd, max_queue_length);
-
+void TCPSocket::listen_and_serve(int max_clients,
+                                 void (*handler)(int client_socket_fd)) {
+  int return_val = alias_listen(this->socket_fd, max_clients);
   if (return_val < 0) die(return_val, "Can't listen");
-}
 
-void TCPSocket::accept(void (*handler)(int client_socket_fd)) {
   for (;;) {
     struct sockaddr_storage client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
@@ -37,6 +35,10 @@ void TCPSocket::accept(void (*handler)(int client_socket_fd)) {
     if (client_socket_fd == -1)
       die(-1, "Invalid client socket file descriptor");
     handler(client_socket_fd);
-    close(client_socket_fd);
+    alias_close(client_socket_fd);
   }
+}
+
+void TCPSocket::serve(void (*handler)(int server_socket_fd)) {
+  handler(this->socket_fd);
 }
