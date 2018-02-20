@@ -3,6 +3,7 @@
 
 #include <sys/socket.h>
 #include "inet_address.hpp"
+#include "message.hpp"
 
 int alias_close(int fd);
 int alias_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -23,9 +24,11 @@ class Socket {
   virtual void connect() = 0;
   virtual void bind() = 0;
   virtual void listen_and_serve(int max_clients,
-                                void (*handler)(int client_socket_fd)) = 0;
-  // virtual void send(DatagramMessage msg) = 0;
-  // virtual DatagramMessage recv() = 0;
+                                void (*handler)(Socket *socket,
+                                                int client_socket_fd)) = 0;
+  virtual void serve(void (*handler)(Socket *socket, int server_socket_fd)) = 0;
+  virtual void send(Message *msg) = 0;
+  virtual Message *recv() = 0;
 };
 
 #endif

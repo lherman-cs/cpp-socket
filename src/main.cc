@@ -3,16 +3,18 @@
 #include "ipv4.hpp"
 #include "tcp.hpp"
 
-void server_handler(int client_socket_fd) {
+void server_handler(Socket *socket, int client_socket_fd) {
   std::cerr << "Got a client" << std::endl;
   write(client_socket_fd, "Hello world\n", 12);
 }
 
-void client_handler(int server_socket_fd) {
-  char buf[1024] = {0};
+void client_handler(Socket *socket, int server_socket_fd) {
+  Message *msg = socket->recv();
 
-  read(server_socket_fd, buf, sizeof(buf));
-  std::cerr << buf << std::endl;
+  char buf[4];
+  while (msg->read(buf, 4) > 0) std::cerr << buf;
+
+  delete msg;
 }
 
 int main() {

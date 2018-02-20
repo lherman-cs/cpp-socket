@@ -21,7 +21,8 @@ void TCPSocket::bind() {
 }
 
 void TCPSocket::listen_and_serve(int max_clients,
-                                 void (*handler)(int client_socket_fd)) {
+                                 void (*handler)(Socket *socket,
+                                                 int client_socket_fd)) {
   int return_val = alias_listen(this->socket_fd, max_clients);
   if (return_val < 0) die(return_val, "Can't listen");
 
@@ -34,11 +35,28 @@ void TCPSocket::listen_and_serve(int max_clients,
 
     if (client_socket_fd == -1)
       die(-1, "Invalid client socket file descriptor");
-    handler(client_socket_fd);
+    handler(this, client_socket_fd);
     alias_close(client_socket_fd);
   }
 }
 
-void TCPSocket::serve(void (*handler)(int server_socket_fd)) {
-  handler(this->socket_fd);
+void TCPSocket::serve(void (*handler)(Socket *socket, int server_socket_fd)) {
+  handler(this, this->socket_fd);
+}
+
+void TCPSocket::send(Message *msg) {
+  char buf[1024];
+  int len;
+  while ((len = msg->read(buf, sizeof(buf)) > 0))
+    write(this->socket_fd, buf, len);
+}
+
+Message *TCPSocket::recv() {
+  char buf[1024];
+  int len;
+  Message *msg = new Message();
+  while ((len = read(this->socket_fd, buf, sizeof(buf))) > 0)
+    msg->write(buf, len);
+
+  return msg;
 }
