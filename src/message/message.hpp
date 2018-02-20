@@ -15,6 +15,6 @@ class Message {
   Message(int init_cap);
   ~Message();
 
-  int write(void *buf, int size);
+  int write(const void *buf, int size);
   int read(void *buf, int size);
 };

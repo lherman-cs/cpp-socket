@@ -39,7 +39,7 @@ void Message::shrink() {
   this->ptr -= half_size;
 }
 
-int Message::write(void *buf, int size) {
+int Message::write(const void *buf, int size) {
   int space = this->cap - this->len;
   // Make sure there is enough space to write
   while (space < (size << 1)) {
