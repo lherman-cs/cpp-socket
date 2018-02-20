@@ -3,6 +3,7 @@
 #include "utils.hpp"
 
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <sys/socket.h>
 #include <cstring>
 
@@ -13,11 +14,17 @@ struct sockaddr_in InetAddressV4::construct_addr(std::string ip,
   memset(&addr, 0, sizeof(addr));
   addr.sin_family = AF_INET;
 
-  if (ip == "*")
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  else {
-    int return_val = inet_pton(AF_INET, ip.c_str(), &addr.sin_addr.s_addr);
-    if (return_val <= 0) die(return_val, "Invalid IP string");
+  if (ip == "*") addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+  // Try to parse the dot quad syntax. Else, try to parse the domain name.
+  else if (inet_pton(AF_INET, ip.c_str(), &addr.sin_addr.s_addr) <= 0) {
+    struct hostent *host = gethostbyname(ip.c_str());
+
+    if (host != NULL) {
+      struct in_addr **addr_list = (struct in_addr **)host->h_addr_list;
+      addr.sin_addr = *addr_list[0];
+    } else
+      die(-1, "Invalid IP address/hostname");
   }
   addr.sin_port = htons(port);
 
