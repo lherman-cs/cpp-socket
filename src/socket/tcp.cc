@@ -2,6 +2,8 @@
 #include "utils.hpp"
 
 #include <unistd.h>
+#include <cstdio>
+#include <iostream>
 
 TCPSocket::TCPSocket(InetAddress &addr) : Socket(addr, SOCK_STREAM) {}
 
@@ -44,18 +46,20 @@ void TCPSocket::serve(void (*handler)(Socket *socket, int server_socket_fd)) {
   handler(this, this->socket_fd);
 }
 
-void TCPSocket::send(Message *msg) {
-  char buf[1024];
-  int len;
-  while ((len = msg->read(buf, sizeof(buf)) > 0))
-    write(this->socket_fd, buf, len);
+void TCPSocket::send(int to_fd, Message *msg) {
+  char buf[1024] = {0};
+  ssize_t len;
+
+  while ((len = msg->read(buf, sizeof(buf))) > 0)
+    alias_send(to_fd, buf, len, 0);
 }
 
 Message *TCPSocket::recv() {
-  char buf[1024];
-  int len;
+  char buf[1024] = {0};
+  ssize_t len;
   Message *msg = new Message();
-  while ((len = read(this->socket_fd, buf, sizeof(buf))) > 0)
+
+  while ((len = alias_recv(this->socket_fd, buf, sizeof(buf), 0)) > 0)
     msg->write(buf, len);
 
   return msg;

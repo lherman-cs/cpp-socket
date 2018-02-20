@@ -19,6 +19,14 @@ int alias_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) {
   return accept(sockfd, addr, addrlen);
 }
 
+ssize_t alias_send(int sockfd, const void *buf, size_t len, int flags) {
+  return send(sockfd, buf, len, flags);
+}
+
+ssize_t alias_recv(int sockfd, void *buf, size_t len, int flags) {
+  return recv(sockfd, buf, len, flags);
+}
+
 Socket::Socket(InetAddress &addr, int type) {
   this->addr = &addr;
   this->type = type;

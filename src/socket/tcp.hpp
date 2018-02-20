@@ -12,7 +12,7 @@ class TCPSocket : public Socket {
   void listen_and_serve(int max_clients,
                         void (*handler)(Socket *socket, int client_socket_fd));
   void serve(void (*handler)(Socket *socket, int server_socket_fd));
-  void send(Message *msg);
+  void send(int to_fd, Message *msg);
   Message *recv();
 };
 
