@@ -2,8 +2,6 @@
 #include "utils.hpp"
 
 #include <unistd.h>
-#include <cstdio>
-#include <iostream>
 
 TCPSocket::TCPSocket(InetAddress &addr) : Socket(addr, SOCK_STREAM) {}
 
