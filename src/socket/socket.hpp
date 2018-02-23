@@ -24,7 +24,6 @@ class Socket {
 
  public:
   void close();
-  virtual void connect() = 0;
   virtual void bind() = 0;
   virtual void listen_and_serve(int max_clients,
                                 void (*handler)(Socket *socket,
