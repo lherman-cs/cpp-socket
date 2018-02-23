@@ -17,4 +17,6 @@ class Message {
 
   int write(const void *buf, int size);
   int read(void *buf, int size);
+  char *get_buf();
+  int get_len();
 };

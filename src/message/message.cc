@@ -67,3 +67,7 @@ int Message::read(void *buf, int size) {
   // Return zero if there is nothing left to read
   return size;
 }
+
+char *Message::get_buf() { return this->buf + this->ptr; }
+
+int Message::get_len() { return this->len; }
