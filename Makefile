@@ -9,6 +9,7 @@ CPPFLAGS= -g $(INCLUDE)
 
 $(PROG): $(OBJECTS)
 	$(CXX) $(CPPFLAGS) -o $@ $?
+	@if [ ! -d $(BUILDDIR) ]; then mkdir $(BUILDDIR); fi # Check if the build dir exists. Else, create it
 	mv $(OBJECTS) $(PROG) $(BUILDDIR)
 
 $(OBJECTS): $(SOURCES)
