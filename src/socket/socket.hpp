@@ -23,8 +23,9 @@ class Socket {
   ~Socket();
 
  public:
+  void bind();
   void close();
-  virtual void bind() = 0;
+  virtual Message *recv() = 0;
 };
 
 #endif

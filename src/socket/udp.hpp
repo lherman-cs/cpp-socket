@@ -7,7 +7,6 @@ class UDPSocket : public Socket {
  public:
   UDPSocket(InetAddress &addr);
   ~UDPSocket();
-  void bind();
   void listen_and_serve(void (*handler)(UDPSocket *socket,
                                         InetAddress client_addr));
   void serve(void (*handler)(UDPSocket *socket, InetAddress server_addr));

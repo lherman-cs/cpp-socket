@@ -8,13 +8,6 @@ UDPSocket::UDPSocket(InetAddress &addr) : Socket(addr, SOCK_DGRAM) {}
 
 UDPSocket::~UDPSocket() {}
 
-void UDPSocket::bind() {
-  int return_val =
-      alias_bind(this->socket_fd, this->addr.get_addr(), this->addr.get_size());
-
-  if (return_val < 0) die(return_val, "Can't bind");
-}
-
 void UDPSocket::listen_and_serve(void (*handler)(UDPSocket *socket,
                                                  InetAddress client_addr)) {
   // Wait a client to come

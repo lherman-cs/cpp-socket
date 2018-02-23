@@ -35,4 +35,11 @@ Socket::Socket(InetAddress &addr, int type) : addr(addr) {
 
 Socket::~Socket() { alias_close(this->socket_fd); }
 
+void Socket::bind() {
+  int rc =
+      alias_bind(this->socket_fd, this->addr.get_addr(), this->addr.get_size());
+
+  if (rc < 0) die(rc, "Can't bind");
+}
+
 void Socket::close() { alias_close(this->socket_fd); }

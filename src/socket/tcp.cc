@@ -13,13 +13,6 @@ void TCPSocket::connect() {
   if (return_val < 0) die(return_val, "Can't connect");
 }
 
-void TCPSocket::bind() {
-  int return_val =
-      alias_bind(this->socket_fd, this->addr.get_addr(), this->addr.get_size());
-
-  if (return_val < 0) die(return_val, "Can't bind");
-}
-
 void TCPSocket::listen_and_serve(int max_clients,
                                  void (*handler)(TCPSocket *socket,
                                                  int client_socket_fd)) {
