@@ -15,7 +15,7 @@ $(OBJECTS): $(SOURCES)
 	$(CXX) $(CPPFLAGS) -c $?
 
 clean: 
-	rm -f $(BUILDDIR)/* *.o
+	rm -f $(BUILDDIR)/* *.o $(shell find $(SRCDIR) -type f -name *.out)
 
 test: $(PROG) 
 	@echo ""
