@@ -16,7 +16,7 @@ ssize_t alias_recv(int sockfd, void *buf, size_t len, int flags);
 
 class Socket {
  protected:
-  InetAddress *addr;
+  InetAddress addr;
   int type;
   int socket_fd;
   Socket(InetAddress &addr, int type);

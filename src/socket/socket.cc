@@ -27,8 +27,7 @@ ssize_t alias_recv(int sockfd, void *buf, size_t len, int flags) {
   return recv(sockfd, buf, len, flags);
 }
 
-Socket::Socket(InetAddress &addr, int type) {
-  this->addr = &addr;
+Socket::Socket(InetAddress &addr, int type) : addr(addr) {
   this->type = type;
   this->socket_fd = socket(addr.get_family(), this->type, 0);
   if (this->socket_fd == -1) die(-1, "Socket file descriptor error");
