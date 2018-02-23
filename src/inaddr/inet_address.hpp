@@ -19,6 +19,7 @@ class InetAddress {
 
  public:
   InetAddress(const struct sockaddr* addr, socklen_t addrlen);
+  InetAddress(const InetAddress& other);
   sa_family_t get_family();
   struct sockaddr* get_addr();
   socklen_t get_size();

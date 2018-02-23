@@ -19,6 +19,15 @@ int main() {
   assert(addr1->sin_port == addr2->sin_port);
   assert(addr1->sin_addr.s_addr == addr2->sin_addr.s_addr);
 
-  std::cout << addr1->sin_port << std::endl;
+  // Test copy constructor
+  InetAddress copy(ip2);
+  assert(copy.get_size() == ip2.get_size());
+  assert(((struct sockaddr_in*)copy.get_addr())->sin_family ==
+         ((struct sockaddr_in*)ip2.get_addr())->sin_family);
+  assert(((struct sockaddr_in*)copy.get_addr())->sin_port ==
+         ((struct sockaddr_in*)ip2.get_addr())->sin_port);
+  assert(((struct sockaddr_in*)copy.get_addr())->sin_addr.s_addr ==
+         ((struct sockaddr_in*)ip2.get_addr())->sin_addr.s_addr);
+
   return 0;
 }
