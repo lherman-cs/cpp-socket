@@ -15,13 +15,13 @@ class InetAddress {
  protected:
   union GenericAddress _addr;
   socklen_t size;
-
   InetAddress(const struct sockaddr_in& addr4);
 
  public:
+  InetAddress(const struct sockaddr* addr, socklen_t addrlen);
   sa_family_t get_family();
   struct sockaddr* get_addr();
-  int get_size();
+  socklen_t get_size();
 };
 
 #endif
