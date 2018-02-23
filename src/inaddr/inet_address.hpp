@@ -16,6 +16,7 @@ class InetAddress {
   union GenericAddress _addr;
   socklen_t size;
   InetAddress(const struct sockaddr_in& addr4);
+  InetAddress(const struct sockaddr_in6& addr6);
 
  public:
   InetAddress(const struct sockaddr* addr, socklen_t addrlen);

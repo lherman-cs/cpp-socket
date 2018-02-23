@@ -9,6 +9,11 @@ InetAddress::InetAddress(const struct sockaddr_in& addr4) {
   this->size = sizeof(addr4);
 }
 
+InetAddress::InetAddress(const struct sockaddr_in6& addr6) {
+  this->_addr.addr6 = addr6;
+  this->size = sizeof(addr6);
+}
+
 InetAddress::InetAddress(const struct sockaddr* addr, socklen_t addrlen) {
   memset(&this->_addr, 0, sizeof(this->_addr));
   memcpy(&this->_addr, addr, addrlen);
