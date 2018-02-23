@@ -25,12 +25,6 @@ class Socket {
  public:
   void close();
   virtual void bind() = 0;
-  virtual void listen_and_serve(int max_clients,
-                                void (*handler)(Socket *socket,
-                                                int client_socket_fd)) = 0;
-  virtual void serve(void (*handler)(Socket *socket, int server_socket_fd)) = 0;
-  virtual void send(int to_fd, Message *msg) = 0;
-  virtual Message *recv() = 0;
 };
 
 #endif

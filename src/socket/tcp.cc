@@ -21,7 +21,7 @@ void TCPSocket::bind() {
 }
 
 void TCPSocket::listen_and_serve(int max_clients,
-                                 void (*handler)(Socket *socket,
+                                 void (*handler)(TCPSocket *socket,
                                                  int client_socket_fd)) {
   int return_val = alias_listen(this->socket_fd, max_clients);
   if (return_val < 0) die(return_val, "Can't listen");
@@ -40,7 +40,8 @@ void TCPSocket::listen_and_serve(int max_clients,
   }
 }
 
-void TCPSocket::serve(void (*handler)(Socket *socket, int server_socket_fd)) {
+void TCPSocket::serve(void (*handler)(TCPSocket *socket,
+                                      int server_socket_fd)) {
   handler(this, this->socket_fd);
 }
 

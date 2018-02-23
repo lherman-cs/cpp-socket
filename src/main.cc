@@ -3,7 +3,7 @@
 #include "ipv4.hpp"
 #include "tcp.hpp"
 
-void server_handler(Socket *socket, int client_socket_fd) {
+void server_handler(TCPSocket *socket, int client_socket_fd) {
   std::cerr << "Got a client" << std::endl;
   Message msg;
 
@@ -11,7 +11,7 @@ void server_handler(Socket *socket, int client_socket_fd) {
   socket->send(client_socket_fd, &msg);
 }
 
-void client_handler(Socket *socket, int server_socket_fd) {
+void client_handler(TCPSocket *socket, int server_socket_fd) {
   Message *msg = socket->recv();
 
   char buf[1024] = {0};
