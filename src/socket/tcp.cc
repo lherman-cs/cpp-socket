@@ -16,6 +16,7 @@ void TCPSocket::connect() {
 void TCPSocket::listen_and_serve(int max_clients,
                                  void (*handler)(TCPSocket *socket,
                                                  int client_socket_fd)) {
+  // Open the socket to listen to incoming clients
   int return_val = alias_listen(this->socket_fd, max_clients);
   if (return_val < 0) die(return_val, "Can't listen");
 
@@ -23,11 +24,14 @@ void TCPSocket::listen_and_serve(int max_clients,
     struct sockaddr_storage client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
 
+    // A blocking I/O to wait a client to be connected first
     int client_socket_fd = alias_accept(
         this->socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
 
     if (client_socket_fd == -1)
       die(-1, "Invalid client socket file descriptor");
+
+    // Handler will take the course
     handler(this, client_socket_fd);
     alias_close(client_socket_fd);
   }
@@ -42,6 +46,7 @@ void TCPSocket::send(int to_fd, Message *msg) {
   char buf[1024] = {0};
   ssize_t len;
 
+  // Send chunk by chunk
   while ((len = msg->read(buf, sizeof(buf))) > 0)
     alias_send(to_fd, buf, len, 0);
 }
@@ -51,6 +56,7 @@ Message *TCPSocket::recv() {
   ssize_t len;
   Message *msg = new Message();
 
+  // Receive chunk by chunk
   while ((len = alias_recv(this->socket_fd, buf, sizeof(buf), 0)) > 0)
     msg->write(buf, len);
 
