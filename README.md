@@ -35,3 +35,79 @@ The IP layer is located in "inaddr". If we see what we have in the directory, we
 
 ## Socket Layer
 
+The socket layer is located in "socket". The same design as the IP layer. There are 3 main things in the socket layet: socket, tcp, and udp. 
+
+* "socket" is an abstraction class that is designed to be very generic. This class is used to hold redundant codes from its subclasses and to force the abstraction of its sub classes.
+* "tcp" is a wrapper class for TCP protocol
+* "udp" is a wrapper class for UDP protocol
+
+
+
+## Message Layer
+
+In this layer, there is only one class. The purpose of this class is to be a self-growth container. The container will smartly self grow when it's necessary. When the data has been read, the container will reuse the space to be reused for another writing.
+
+
+
+## How to use?
+
+Following is a snippet code of how to use the API:
+
+```c++
+#include <unistd.h>
+#include <iostream>
+#include "ipv4.hpp"
+#include "ipv6.hpp"
+#include "tcp.hpp"
+
+void server_handler(TCPSocket *socket, int client_socket_fd) {
+  std::cerr << "Got a client" << std::endl;
+  Message msg;
+
+  msg.write("Hello world", 13);
+  socket->send(client_socket_fd, &msg);
+}
+
+void client_handler(TCPSocket *socket, int server_socket_fd) {
+  Message *msg = socket->recv();
+
+  char buf[1024] = {0};
+  while (msg->read(buf, 1024) > 0) std::cerr << buf;
+
+  delete msg;
+}
+
+int main() {
+  pid_t child_pid = fork();
+  if (child_pid != 0) {
+    // Parent/Server
+    InetAddressV6 addr6("::", 8004);
+    TCPSocket sock(addr6);
+    sock.bind();
+    sock.listen_and_serve(10, server_handler);
+    sock.close();
+  } else {
+    // Child/Client
+    InetAddressV4 addr4("localhost", 8004);
+    TCPSocket sock(addr4);
+    sock.connect();
+    sock.serve(client_handler);
+    sock.close();
+  }
+
+  return 0;
+}
+```
+
+In this program, there is a client and a server. For the server, I used IPv6. For the client, I used IPv4. Then, the client and the server are connected through a TCP socket. Here, you can see that either client or server has to have a handler. This is, in fact, what makes the API powerful. By having a handler, you can have an ability to do a lot of things without worrying about the unnecessary details under the implementation.
+
+
+
+## How To Run The Main Test Program?
+
+You can simply issue the following command in the root directory of the project:
+
+ ```sh
+make test
+ ```
+
