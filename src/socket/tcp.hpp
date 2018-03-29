@@ -4,6 +4,10 @@
 #include "socket.hpp"
 
 class TCPSocket : public Socket {
+ private:
+  static unsigned child_count;
+  static void child_handler(int signum);
+
  public:
   TCPSocket(InetAddress &addr);
   ~TCPSocket();

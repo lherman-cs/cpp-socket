@@ -1,9 +1,44 @@
 #include "tcp.hpp"
 #include "utils.hpp"
 
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
-TCPSocket::TCPSocket(InetAddress &addr) : Socket(addr, SOCK_STREAM) {}
+unsigned TCPSocket::child_count = 0;
+
+void TCPSocket::child_handler(int signum) {
+  pid_t process_id;  // Child process
+
+  while (child_count)  // Clean up all zombies
+  {
+    process_id = waitpid((pid_t)-1, NULL, WNOHANG); /* Non-blocking wait */
+    switch (process_id) {
+      case -1:  // Error
+        die(errno, "waitpid() failed");
+        break;
+      case 0:  // Done
+        goto stop;
+        break;
+      default:  // Cleaned up; reduce the child counter
+        child_count--;
+        break;
+    }
+  }
+stop:
+  return;
+}
+
+TCPSocket::TCPSocket(InetAddress &addr) : Socket(addr, SOCK_STREAM) {
+  struct sigaction cleanup;
+  cleanup.sa_handler = TCPSocket::child_handler;
+  if (sigfillset(&cleanup.sa_mask) < 0)  // mask all signals
+    die(errno, "sigfillset() failed");
+  cleanup.sa_flags = SA_RESTART;
+
+  // Set signal disposition for child-termination signals
+  if (sigaction(SIGCHLD, &cleanup, 0) < 0) die(errno, "sigaction() failed");
+}
 
 TCPSocket::~TCPSocket() {}
 
@@ -31,8 +66,22 @@ void TCPSocket::listen_and_serve(int max_clients,
     if (client_socket_fd == -1)
       die(-1, "Invalid client socket file descriptor");
 
-    // Handler will take the course
-    handler(this, client_socket_fd);
+    // Handle concurrently
+    switch (fork()) {
+      case -1:
+        // Error occured
+        die(errno, "Error in creating a child process");
+        break;
+      case 0:
+        // Close parent's server socket fd
+        fprintf(stderr, "Closing parent's server socket fd\n");
+        alias_close(this->socket_fd);
+
+        // Handler will take the course
+        handler(this, client_socket_fd);
+        exit(0);
+        break;
+    }
     alias_close(client_socket_fd);
   }
 }
