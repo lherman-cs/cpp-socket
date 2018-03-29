@@ -1,4 +1,4 @@
-#include "ipv6.hpp"
+#include "inaddr/ipv6.hpp"
 #include "utils/utils.hpp"
 
 #include <arpa/inet.h>

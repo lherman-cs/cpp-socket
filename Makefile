@@ -1,30 +1,5 @@
-SOURCEDIR= src
-BUILDDIR= build
-PROG= cpp-socket 
-BACKUPNAME= cpp-socket.tar.gz
-SOURCES=$(shell find $(SOURCEDIR) -type f -name *.cc ! -name *_test.cc)
-OBJECTS=$(shell find $(SOURCEDIR) -type f -name *.cc ! -name *_test.cc | rev | cut -d '/' -f1 | rev | cut -d '.' -f-1 | xargs printf "%s.o\n")
-INCLUDE= src
-CXX= g++
-CPPFLAGS= -O3 -I$(INCLUDE)
-
-$(PROG): $(OBJECTS)
-	$(CXX) $(CPPFLAGS) -o $@ $?
-	@if [ ! -d $(BUILDDIR) ]; then mkdir $(BUILDDIR); fi # Check if the build dir exists. Else, create it
-	mv $(OBJECTS) $(PROG) $(BUILDDIR)
-
-$(OBJECTS): $(SOURCES)
-	$(CXX) $(CPPFLAGS) -c $?
-
-clean: 
-	rm -f $(BUILDDIR)/* $(PROG) *.o $(shell find $(SOURCEDIR) -type f -name *.out)
-
-test: $(PROG) 
+build:
+	@if [ ! -d build ]; then mkdir build; fi
+	cd build && cmake .. && make
 	@echo ""
-	@echo "============================== Output =============================="
-	@echo ""
-	@$(BUILDDIR)/$(PROG)
-
-backup: clean
-	rm -f $(BACKUPNAME)
-	tar -zcvf $(BACKUPNAME) *
+	@echo "Your programs have been built in build/bin"
