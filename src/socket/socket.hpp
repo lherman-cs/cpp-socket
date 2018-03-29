@@ -3,8 +3,8 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
-#include "inet_address.hpp"
-#include "message.hpp"
+#include "inaddr/inet_address.hpp"
+#include "message/message.hpp"
 
 int alias_close(int fd);
 int alias_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);

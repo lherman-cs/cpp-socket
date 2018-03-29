@@ -1,5 +1,5 @@
 #include "tcp.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -74,7 +74,6 @@ void TCPSocket::listen_and_serve(int max_clients,
         break;
       case 0:
         // Close parent's server socket fd
-        fprintf(stderr, "Closing parent's server socket fd\n");
         alias_close(this->socket_fd);
 
         // Handler will take the course

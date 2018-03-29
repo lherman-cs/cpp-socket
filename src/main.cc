@@ -1,8 +1,8 @@
 #include <unistd.h>
 #include <iostream>
-#include "ipv4.hpp"
-#include "ipv6.hpp"
-#include "tcp.hpp"
+#include "inaddr/ipv4.hpp"
+#include "inaddr/ipv6.hpp"
+#include "socket/tcp.hpp"
 
 void server_handler(TCPSocket *socket, int client_socket_fd) {
   std::cerr << "Got a client" << std::endl;

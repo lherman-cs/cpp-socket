@@ -1,7 +1,7 @@
 #ifndef IPV6_HPP
 #define IPV6_HPP
 
-#include "inet_address.hpp"
+#include "inaddr/inet_address.hpp"
 
 // Note: InetAddressV6 doesn't support hostnames. Please use InetAddressV4 if
 //       you want to use hostnames

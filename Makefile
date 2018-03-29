@@ -4,9 +4,9 @@ PROG= cpp-socket
 BACKUPNAME= cpp-socket.tar.gz
 SOURCES=$(shell find $(SOURCEDIR) -type f -name *.cc ! -name *_test.cc)
 OBJECTS=$(shell find $(SOURCEDIR) -type f -name *.cc ! -name *_test.cc | rev | cut -d '/' -f1 | rev | cut -d '.' -f-1 | xargs printf "%s.o\n")
-INCLUDE=$(shell find $(SOURCEDIR) -type d | xargs printf "-I%s\n")
+INCLUDE= src
 CXX= g++
-CPPFLAGS= -g $(INCLUDE)
+CPPFLAGS= -O3 -I$(INCLUDE)
 
 $(PROG): $(OBJECTS)
 	$(CXX) $(CPPFLAGS) -o $@ $?

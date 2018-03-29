@@ -1,5 +1,5 @@
 #include "ipv6.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <arpa/inet.h>
 #include <netdb.h>

@@ -1,7 +1,7 @@
 #ifndef IPV4_HPP
 #define IPV4_HPP
 
-#include "inet_address.hpp"
+#include "inaddr/inet_address.hpp"
 
 class InetAddressV4 : public InetAddress {
  private:

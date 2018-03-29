@@ -1,7 +1,7 @@
 #ifndef TCP_HPP
 #define TCP_HPP
 
-#include "socket.hpp"
+#include "socket/socket.hpp"
 
 class TCPSocket : public Socket {
  private:

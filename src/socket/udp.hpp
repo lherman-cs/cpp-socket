@@ -1,7 +1,7 @@
 #ifndef UDP_HPP
 #define UDP_HPP
 
-#include "socket.hpp"
+#include "socket/socket.hpp"
 
 class UDPSocket : public Socket {
  public:

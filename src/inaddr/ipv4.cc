@@ -1,6 +1,6 @@
 
-#include "ipv4.hpp"
-#include "utils.hpp"
+#include "inaddr/ipv4.hpp"
+#include "utils/utils.hpp"
 
 #include <arpa/inet.h>
 #include <netdb.h>

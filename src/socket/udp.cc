@@ -1,5 +1,5 @@
-#include "udp.hpp"
-#include "utils.hpp"
+#include "socket/udp.hpp"
+#include "utils/utils.hpp"
 
 #include <unistd.h>
 #include <cstring>
