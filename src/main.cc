@@ -8,7 +8,9 @@ void server_handler(TCPSocket *socket, int client_socket_fd) {
   std::cerr << "Got a client" << std::endl;
   Message msg;
 
-  msg.write("Hello world", 13);
+  const char text[] = "Hello world";
+  msg.write((void *)text, sizeof(text));
+  std::cerr << "Done" << std::endl;
   socket->send(client_socket_fd, &msg);
 }
 
@@ -28,7 +30,7 @@ int main() {
     InetAddressV6 addr6("::", 8004);
     TCPSocket sock(addr6);
     sock.bind();
-    sock.listen_and_serve(10, server_handler);
+    sock.listen_and_serve(100, server_handler);
   } else {
     // Child/Client
     InetAddressV4 addr4("localhost", 8004);
