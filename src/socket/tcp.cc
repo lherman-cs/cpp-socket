@@ -1,6 +1,8 @@
 #include "socket/tcp.hpp"
 #include "utils/utils.hpp"
 
+#include <errno.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
