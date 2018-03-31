@@ -34,7 +34,7 @@ stop:
 
   // If size == 0, that means there's no error during transferring
   if (size == 0) {
-    // Calculate throughput in Gbps
+    // Calculate throughput in Mbps
     throughput = ((double)8 * total_size) / (total_time * 1000000);
     printf("transfer_size: %d chunk_size: %d throughput: %.4f Mbps\n",
            total_size, CHUNK_SIZE, throughput);
